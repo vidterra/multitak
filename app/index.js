@@ -36,7 +36,6 @@ messageEmitter.on('cotAdd', (message) => {
 const messageLimit = process.env.MESSAGE_HISTORY_LIMIT ? parseInt(process.env.MESSAGE_HISTORY_LIMIT) : 1000
 
 const addToHistory = (message) => {
-	//MESSAGE_HISTORY_LIMIT
 	cotHistory.push(message)
 	if(messageLimit > 0 && cotHistory.length > messageLimit) {
 		global.cotHistory = cotHistory.slice(-1 * messageLimit)
@@ -45,7 +44,7 @@ const addToHistory = (message) => {
 
 setInterval(() => {
 	console.debug(`${cotHistory.length} messages in memory`)
-}, 3000)
+}, 5000)
 
 http.listen(process.env.WEB_API_PORT || 8081, process.env.WEB_API_ADDRESS || '0.0.0.0', () => {
 	console.info('Started')

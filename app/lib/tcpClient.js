@@ -15,7 +15,7 @@ const run = () => {
 		let intervalConnect = false
 
 		const connect = () => {
-			client.connect(cotPort, cotAddress, function () {
+			client.connect(cotPort, cotAddress, () => {
 				clearIntervalConnect()
 				console.debug(`Connected to remote TCP host ${cotAddress}:${cotPort}`)
 			})
@@ -33,7 +33,7 @@ const run = () => {
 		}
 
 
-		client.on('data', function (raw) {
+		client.on('data', (raw) => {
 			// this assumes only COT XML will be sent over TCP
 			try {
 				const result = helper.findCotTcp(raw)
