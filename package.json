@@ -1,0 +1,17 @@
+{
+	"name": "@vidterra/multitak",
+	"version": "0.0.1",
+	"dependencies": {
+		"@vidterra/tak.js": "^0.0.6",
+		"dotenv": "",
+		"express": "",
+		"module-alias": "",
+		"morgan": "",
+		"socket.io": "",
+		"uuid": ""
+	},
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js"
+	}
+}
