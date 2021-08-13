@@ -10,7 +10,7 @@ MultiTAK is designed to connect TAK users on various networks together with mini
 
 ## Installation
 
-MultiTAK is designed to be used with Docker. Docker images can be found at https://hub.docker.com/repository/docker/vidterra/multitak. Images are available for x86, arm64 and arm/v7 (Pi).
+MultiTAK is designed to be used with Docker. Docker images can be found at https://hub.docker.com/r/vidterra/multitak. Images are available for x86, arm64 and arm/v7 (Pi).
 
 ### Docker
 
