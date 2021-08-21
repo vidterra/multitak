@@ -3,17 +3,22 @@ const moduleAlias = require('module-alias')
 moduleAlias.addAlias('@lib', `${__dirname}/lib`)
 moduleAlias.addAlias('@routes', `${__dirname}/routes`)
 
+const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
 const morgan = require('morgan')
 
 const app = express()
 const http = require('http').Server(app)
-const io = require('socket.io')(http, {path: '/socket'})
+const xmlparser = require('express-xml-bodyparser')
+
+app.use(xmlparser())
+app.use(bodyParser.json())
 
 app.use(cors())
 app.use(morgan('combined'))
 app.disable('x-powered-by')
+app.use(require('@routes/Marti/vcm'))
 app.use(require('@routes/messages'))
 
 const EventEmitter = require('events')
@@ -21,6 +26,7 @@ global.messageEmitter = new EventEmitter()
 
 require('@lib/tcpServer')
 require('@lib/tcpClient')
+require('@lib/sslClient')
 require('@lib/multicastReceive')
 require('@lib/multicastSend')
 
@@ -46,6 +52,6 @@ setInterval(() => {
 	console.debug(`${cotHistory.length} messages in memory`)
 }, 5000)
 
-http.listen(process.env.WEB_API_PORT || 8081, process.env.WEB_API_ADDRESS || '0.0.0.0', () => {
+http.listen(process.env.WEB_API_PORT || 8080, process.env.WEB_API_ADDRESS || '0.0.0.0', () => {
 	console.info('Started')
 })

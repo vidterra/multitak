@@ -3,11 +3,14 @@
 	"version": "0.0.1",
 	"dependencies": {
 		"@vidterra/tak.js": "^0.0.6",
+		"body-parser": "",
+		"cookie-parser": "",
+		"cors": "",
 		"dotenv": "",
 		"express": "",
+		"express-xml-bodyparser": "",
 		"module-alias": "",
 		"morgan": "",
-		"socket.io": "",
 		"uuid": ""
 	},
 	"main": "index.js",

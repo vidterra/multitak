@@ -3,7 +3,9 @@ const os = require('os')
 
 module.exports.findCotTcp = (raw) => {
 	const stringData = raw.toString()
-	return stringData.match(/<event.*?<\/event>/g) // split incoming data into individual COT messages
+	const matches = stringData.match(/<event.*?<\/event>/g) // split incoming data into individual COT messages
+	if(!matches) return []
+	else return matches
 }
 
 module.exports.parseMessage = (message) => {

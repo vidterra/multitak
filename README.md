@@ -72,10 +72,22 @@ MultiTAK can be configured using environment variables in 3 ways
 ### Environment Variables
 
 `REMOTE_TCP_SERVER=tcp://yourserver:8087` 
-- MultiTAK will connect to a remote TAK server 
+- MultiTAK will connect to a remote TAK server via TCP 
 - When disconnected, reconnection attempts occur every 5 sec.
-- SSL is not currently supported
 - `Default` is off if not defined
+
+`REMOTE_SSL_SERVER=ssl://yourserver:8089`
+- MultiTAK will connect to a remote TAK server via SSL
+- Reconnections are not attempted
+- `Default` is off if not defined
+
+`REMOTE_SSL_SERVER_CERTIFICATE=<path to file>`
+- SSL certificate in PEM format with no password
+- `Required` when using `REMOTE_SSL_SERVER`
+
+`REMOTE_SSL_SERVER_KEY=<path to file>`
+- SSL certificate key in PEM format with no password
+- `Required` when using `REMOTE_SSL_SERVER`
 
 `WEB_API_ADDRESS=0.0.0.0`
 - IP address for the web API server to listen on

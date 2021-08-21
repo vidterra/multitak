@@ -15,6 +15,22 @@ const server = net.createServer((client) => {
 
 	tcpConnections[client.id] = client
 
+	const processMessage = (input) => {
+		//const type = cot.decodeType(input.message.event._attributes.type)
+		switch (true) {
+			case input.message.event._attributes.type === 't-x-c-t':
+				tcpConnections[client.id].write(helper.cotPong())
+				break
+			/*case type.atom === 'a':
+				console.debug('ATOM')
+				//tcpConnections[id].atom = message
+				sendAll(raw)
+				break*/
+			default:
+				messageEmitter.emit('cotAdd', input)
+				break
+		}
+	}
 
 	client.on('data', (raw) => {
 		console.debug(`Received TCP server message`)
@@ -47,23 +63,6 @@ const server = net.createServer((client) => {
 		delete tcpConnections[client.id]
 	})
 })
-
-const processMessage = (input) => {
-	//const type = cot.decodeType(input.message.event._attributes.type)
-	switch (true) {
-		case input.message.event._attributes.type === 't-x-c-t':
-			tcpConnections[input.id].write(helper.cotPong())
-			break
-		/*case type.atom === 'a':
-			console.debug('ATOM')
-			//tcpConnections[id].atom = message
-			sendAll(raw)
-			break*/
-		default:
-			messageEmitter.emit('cotAdd', input)
-			break
-	}
-}
 
 messageEmitter.on('cotTcpServerSend', (packet) => {
 	console.debug(`Sending COT on TCP server`)
