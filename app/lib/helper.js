@@ -1,11 +1,17 @@
 const {cot, proto} = require('@vidterra/tak.js')
 const os = require('os')
 
-module.exports.findCotTcp = (raw) => {
-	const stringData = raw.toString()
-	const matches = stringData.match(/<event.*?<\/event>/g) // split incoming data into individual COT messages
-	if(!matches) return []
-	else return matches
+module.exports.findCotTcp = (text) => {
+	let match = text.match(/(<event.*?<\/event>)(.*)/) // find first COT
+	if(!match) {
+		match = text.match(/(<event[^>]*\/>)(.*)/) // find first COT
+		if(!match) return null
+	}
+	return {
+		event: match[1],
+		remainder: match[2],
+		discard: match[0]
+	}
 }
 
 module.exports.parseMessage = (message) => {
@@ -65,6 +71,32 @@ module.exports.cotPong = () => {
 	})
 }
 
+module.exports.cotPing = () => {
+	const date = Date.now()
+	return cot.js2xml({
+		"event": {
+			"_attributes": {
+				"version": "2.0",
+				"uid": "multitakPong",
+				"type": "t-x-c-t",
+				"how": "h-g-i-g-o",
+				"time": cot.jsDate2cot(date),
+				"start": cot.jsDate2cot(date),
+				"stale": cot.jsDate2cot(date + 20 * 1000), // 20 sec.
+			},
+			"point": {
+				"_attributes": {
+					"lat": "0.000000",
+					"lon": "0.000000",
+					"hae": "0.0",
+					"ce": "9999999.0",
+					"le": "9999999.0"
+				}
+			}
+		}
+	})
+}
+
 module.exports.getInterfaces = (name = null) => {
 	const interfaces = os.networkInterfaces()
 	let filteredInterfaces = []
@@ -91,4 +123,12 @@ module.exports.getInterfaces = (name = null) => {
 	})
 
 	return filteredInterfaces
+}
+
+module.exports.helloPkg = () => {
+	const dt = Date.now();
+	const dtD = new Date(dt).toISOString();
+	const dtD5 = new Date(dt + 250000).toISOString();
+	const pkg = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><event version="2.0" type="t-x-d-d" uid="tak-web-map" time="'+dtD+'" start="'+dtD+'" stale="'+dtD5+'" how="m-g"/>';
+	return pkg;
 }

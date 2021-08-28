@@ -1,8 +1,10 @@
 const {cot} = require("@vidterra/tak.js")
+const fs = require('fs')
 const helper = require('@lib/helper')
 const net = require('net')
 
 const url = process.env.REMOTE_TCP_SERVER
+const cotFile = fs.createWriteStream('./cot')
 
 const run = () => {
 	const urlMatch = url.match(/^tcp:\/\/(.+):([0-9]+)/)
@@ -18,6 +20,7 @@ const run = () => {
 		client.connect(cotPort, cotAddress, () => {
 			clearIntervalConnect()
 			console.debug(`Connected to remote TCP host ${cotAddress}:${cotPort}`)
+			client.write(helper.helloPkg())
 		})
 	}
 
@@ -32,26 +35,41 @@ const run = () => {
 		intervalConnect = false
 	}
 
+	client.pipe(cotFile)
 
+	const processMessage = (input) => {
+		switch (true) {
+			case input.message.event._attributes.type === 't-x-c-t-r':
+				client.write(helper.cotPing())
+				break
+			default:
+				messageEmitter.emit('cotAdd', input)
+				break
+		}
+	}
+
+	let buffer = ''
 	client.on('data', (raw) => {
 		// this assumes only COT XML will be sent over TCP
-		try {
-			const result = helper.findCotTcp(raw)
-			for (const message of result) {
-				console.debug(`Received TCP message from remote TAK server ${url}`)
-				messageEmitter.emit('cotAdd', {
+		let data = buffer + raw.toString()
+		console.debug(`Received TCP message from remote TAK server ${url}`, raw.length, data)
+		for (let result; result = helper.findCotTcp(data);) {
+			try {
+				processMessage({
 					date: Date.now(),
 					source: {
 						type: 'tcpclient',
 						ip: url
 					},
-					raw,
-					message: cot.xml2js(message)
+					raw: result.event,
+					message: cot.xml2js(result.event)
 				})
+			} catch(e) {
+				console.error('Error parsing', e, raw.toString())
 			}
-		} catch (e) {
-			console.error('error', e, raw.toString())
+			data = result.remainder
 		}
+		buffer = data
 	})
 
 	client.on('error', (err) => {
@@ -70,7 +88,6 @@ const run = () => {
 		if (packet.source.type !== 'tcpclient') { // don't send back to the TAK server this was received from
 			console.debug(`Sending COT on TCP client to ${url}`)
 			client.write(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n${cot.js2xml(packet.message)}`)
-			//client.write(packet.raw) // todo add try catch
 		}
 	})
 

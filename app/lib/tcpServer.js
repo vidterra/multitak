@@ -16,40 +16,33 @@ const server = net.createServer((client) => {
 	tcpConnections[client.id] = client
 
 	const processMessage = (input) => {
-		//const type = cot.decodeType(input.message.event._attributes.type)
 		switch (true) {
 			case input.message.event._attributes.type === 't-x-c-t':
 				tcpConnections[client.id].write(helper.cotPong())
 				break
-			/*case type.atom === 'a':
-				console.debug('ATOM')
-				//tcpConnections[id].atom = message
-				sendAll(raw)
-				break*/
 			default:
 				messageEmitter.emit('cotAdd', input)
 				break
 		}
 	}
 
+	let buffer = ''
 	client.on('data', (raw) => {
 		console.debug(`Received TCP server message`)
+		let data = buffer + raw.toString()
 		// this assumes only COT XML will be sent over TCP
-		try {
-			for (const message of helper.findCotTcp(raw)) {
-				processMessage({
-					date: Date.now(),
-					source: {
-						type: 'tcpserver',
-						ip: client.remoteAddress,
-						id: client.id
-					},
-					raw,
-					message: cot.xml2js(message)
-				})
-			}
-		} catch(e) {
-			console.error('error', e, raw.toString())
+		for (let result; result = helper.findCotTcp(data);) {
+			processMessage({
+				date: Date.now(),
+				source: {
+					type: 'tcpserver',
+					ip: client.remoteAddress,
+					id: client.id
+				},
+				raw: result.event,
+				message: cot.xml2js(result.event)
+			})
+			data = result.remainder
 		}
 	})
 
