@@ -20,7 +20,7 @@ Basic command
 
 Advanced command
 
-`docker run -it --rm --net=host --env WEB_API_PORT=9000 --env REMOTE_TCP_SERVER=tcp://your.takserver.com:8087 vidterra/multitak`
+`docker run -it --rm --net=host --env MULTITAK_API_PORT=9090 --env REMOTE_TCP_SERVER=tcp://your.takserver.com:8087 vidterra/multitak`
 
 *You must run in host mode for multicast to work*
 
@@ -89,19 +89,19 @@ MultiTAK can be configured using environment variables in 3 ways
 - SSL certificate key in PEM format with no password
 - `Required` when using `REMOTE_SSL_SERVER`
 
-`WEB_API_ADDRESS=0.0.0.0`
+`MULTITAK_API_ADDRESS=0.0.0.0`
 - IP address for the web API server to listen on
 - `Default` is `0.0.0.0`
 
-`WEB_API_PORT=8081`
+`MULTITAK_API_PORT=8080`
 - Port for the web API server to listen on
-- `Default` is `8081`
+- `Default` is `8080`
 
-`INTERFACE_BLACKLIST_SEND=eth0`
+`INTERFACE_BLACKLIST_SEND=eth0,eth1`
 - Comma separated list of ethernet interfaces to ignore sending multicast
 - `Default` is off if not defined
 
-`INTERFACE_BLACKLIST_RECEIVE=eth0`
+`INTERFACE_BLACKLIST_RECEIVE=eth0,eth1`
 - Comma separated list of ethernet interfaces to ignore receiving multicast
 - `Default` is off if not defined
 

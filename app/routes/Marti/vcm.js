@@ -7,7 +7,7 @@ const xmljs = require('xml-js')
 
 router.use(express.raw({type: 'application/xml'}))
 
-const videoStorage = path.join(process.env.WEB_API_STORAGE, 'video')
+const videoStorage = path.join(process.env.MULTITAK_API_STORAGE, 'video')
 
 try {
 	fss.mkdirSync(videoStorage)

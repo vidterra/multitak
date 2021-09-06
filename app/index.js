@@ -10,12 +10,12 @@ const morgan = require('morgan')
 const nocache = require('nocache')
 
 const messageLimit = process.env.MESSAGE_HISTORY_LIMIT ? parseInt(process.env.MESSAGE_HISTORY_LIMIT) : 1000
-process.env.WEB_API_ADDRESS = process.env.WEB_API_ADDRESS || '0.0.0.0'
-process.env.WEB_API_PORT = process.env.WEB_API_PORT || '8080'
-process.env.WEB_API_STORAGE = process.env.WEB_API_STORAGE || './storage'
+process.env.MULTITAK_API_ADDRESS = process.env.MULTITAK_API_ADDRESS || '0.0.0.0'
+process.env.MULTITAK_API_PORT = process.env.MULTITAK_API_PORT || '8080'
+process.env.MULTITAK_API_STORAGE = process.env.MULTITAK_API_STORAGE || './storage'
 
 try {
-	fss.mkdirSync(process.env.WEB_API_STORAGE)
+	fss.mkdirSync(process.env.MULTITAK_API_STORAGE)
 } catch (e) {
 }
 
@@ -42,7 +42,7 @@ global.messageEmitter = new EventEmitter()
 require('@lib/tcpServer')
 require('@lib/tcpClient')
 require('@lib/sslClient')
-//require('@lib/multicastReceive')
+require('@lib/multicastReceive')
 require('@lib/multicastSend')
 
 global.cotHistory = []
@@ -65,6 +65,6 @@ setInterval(() => {
 	console.debug(`${cotHistory.length} messages in memory`)
 }, 5000)
 
-http.listen(process.env.WEB_API_PORT, process.env.WEB_API_ADDRESS, () => {
-	console.info(`Started API on ${process.env.WEB_API_ADDRESS}:${process.env.WEB_API_PORT}`)
+http.listen(process.env.MULTITAK_API_PORT, process.env.MULTITAK_API_ADDRESS, () => {
+	console.info(`Started API on ${process.env.MULTITAK_API_ADDRESS}:${process.env.MULTITAK_API_PORT}`)
 })

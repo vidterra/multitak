@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.use(express.raw({type: 'application/xml'}))
 
-const dataPackageStorage = path.join(process.env.WEB_API_STORAGE, 'dataPackages')
+const dataPackageStorage = path.join(process.env.MULTITAK_API_STORAGE, 'dataPackages')
 
 const upload = multer({dest: dataPackageStorage})
 
