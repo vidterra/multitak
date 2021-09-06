@@ -3,34 +3,39 @@ const fs = require('fs').promises
 const fss = require('fs')
 const path = require('path')
 const router = express.Router()
+const xmljs = require('xml-js')
 
-const videoPath = path.join('./', 'videoFeeds')
+router.use(express.raw({type: 'application/xml'}))
+
+const videoStorage = path.join(process.env.WEB_API_STORAGE, 'video')
+
 try {
-	fss.mkdirSync(videoPath)
-} catch(e) {}
+	fss.mkdirSync(videoStorage)
+} catch (e) {
+}
 
 router.get('/Marti/vcm', async (req, res) => {
-
-
-	return res.send()
+	const videoFiles = await fs.readdir(videoStorage)
+	const videos = {
+		videoConnections: {
+			feed: []
+		}
+	}
+	for (const videoFile of videoFiles) {
+		const video = await fs.readFile(path.join(videoStorage, videoFile))
+		const videoJson = JSON.parse(video.toString())
+		videos.videoConnections.feed.push(videoJson)
+	}
+	res.set('Content-Type', 'text/xml')
+	const xml = xmljs.js2xml(videos, {compact: true})
+	return res.send(xml)
 })
 
 router.post('/Marti/vcm', async (req, res) => {
-	console.log('11111111111', req.body)
-/*
-	const file = req.files.file
-
-	if (!file) {
-		return res.status(400).send({
-			status: 'FAIL',
-			message: `File not found`
-		})
-	}
-
-	console.log(req.files)
-
-	await file.mv(videoPath)
-*/
+	const videoJs = xmljs.xml2js(req.body, {compact: true})
+	const feed = videoJs.videoConnections.feed
+	const uid = feed.uid._text
+	await fs.writeFile(path.join(videoStorage, uid), JSON.stringify(feed))
 	return res.send({status: 'OK'})
 })
 

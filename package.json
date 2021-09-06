@@ -1,17 +1,18 @@
 {
 	"name": "@vidterra/multitak",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"dependencies": {
 		"@vidterra/tak.js": "^0.0.6",
-		"body-parser": "",
 		"cookie-parser": "",
 		"cors": "",
 		"dotenv": "",
 		"express": "",
-		"express-xml-bodyparser": "",
 		"module-alias": "",
 		"morgan": "",
-		"uuid": ""
+		"multer": "",
+		"nocache": "",
+		"uuid": "",
+		"xml-js": ""
 	},
 	"main": "index.js",
 	"scripts": {

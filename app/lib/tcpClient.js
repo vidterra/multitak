@@ -52,7 +52,7 @@ const run = () => {
 	client.on('data', (raw) => {
 		// this assumes only COT XML will be sent over TCP
 		let data = buffer + raw.toString()
-		console.debug(`Received TCP message from remote TAK server ${url}`, raw.length, data)
+		console.debug(`Received TCP client message from remote TAK server ${url}`, raw.length)
 		for (let result; result = helper.findCotTcp(data);) {
 			try {
 				processMessage({

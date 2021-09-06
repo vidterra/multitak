@@ -3,22 +3,37 @@ const moduleAlias = require('module-alias')
 moduleAlias.addAlias('@lib', `${__dirname}/lib`)
 moduleAlias.addAlias('@routes', `${__dirname}/routes`)
 
-const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
+const fss = require('fs')
 const morgan = require('morgan')
+const nocache = require('nocache')
+
+const messageLimit = process.env.MESSAGE_HISTORY_LIMIT ? parseInt(process.env.MESSAGE_HISTORY_LIMIT) : 1000
+process.env.WEB_API_ADDRESS = process.env.WEB_API_ADDRESS || '0.0.0.0'
+process.env.WEB_API_PORT = process.env.WEB_API_PORT || '8080'
+process.env.WEB_API_STORAGE = process.env.WEB_API_STORAGE || './storage'
+
+try {
+	fss.mkdirSync(process.env.WEB_API_STORAGE)
+} catch (e) {
+}
 
 const app = express()
 const http = require('http').Server(app)
-const xmlparser = require('express-xml-bodyparser')
-
-app.use(xmlparser())
-app.use(bodyParser.json())
 
 app.use(cors())
 app.use(morgan('combined'))
+app.use((req, res, next) => { // content encoding header causes express raw parser to fail
+	delete req.headers['content-encoding']
+	next()
+})
+app.use(express.json())
 app.disable('x-powered-by')
+app.use(nocache())
+app.use(require('@routes/Marti/api'))
 app.use(require('@routes/Marti/vcm'))
+app.use(require('@routes/Marti/sync'))
 app.use(require('@routes/messages'))
 
 const EventEmitter = require('events')
@@ -27,7 +42,7 @@ global.messageEmitter = new EventEmitter()
 require('@lib/tcpServer')
 require('@lib/tcpClient')
 require('@lib/sslClient')
-require('@lib/multicastReceive')
+//require('@lib/multicastReceive')
 require('@lib/multicastSend')
 
 global.cotHistory = []
@@ -39,11 +54,9 @@ messageEmitter.on('cotAdd', (message) => {
 	messageEmitter.emit('cotMulticastSend', message)
 })
 
-const messageLimit = process.env.MESSAGE_HISTORY_LIMIT ? parseInt(process.env.MESSAGE_HISTORY_LIMIT) : 1000
-
 const addToHistory = (message) => {
 	cotHistory.push(message)
-	if(messageLimit > 0 && cotHistory.length > messageLimit) {
+	if (messageLimit > 0 && cotHistory.length > messageLimit) {
 		global.cotHistory = cotHistory.slice(-1 * messageLimit)
 	}
 }
@@ -52,6 +65,6 @@ setInterval(() => {
 	console.debug(`${cotHistory.length} messages in memory`)
 }, 5000)
 
-http.listen(process.env.WEB_API_PORT || 8080, process.env.WEB_API_ADDRESS || '0.0.0.0', () => {
-	console.info('Started')
+http.listen(process.env.WEB_API_PORT, process.env.WEB_API_ADDRESS, () => {
+	console.info(`Started API on ${process.env.WEB_API_ADDRESS}:${process.env.WEB_API_PORT}`)
 })

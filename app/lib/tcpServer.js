@@ -28,7 +28,7 @@ const server = net.createServer((client) => {
 
 	let buffer = ''
 	client.on('data', (raw) => {
-		console.debug(`Received TCP server message`)
+		console.debug(`Received TCP server message`, raw.length)
 		let data = buffer + raw.toString()
 		// this assumes only COT XML will be sent over TCP
 		for (let result; result = helper.findCotTcp(data);) {

@@ -21,9 +21,9 @@ const run = () => {
 
 	const client = tls.connect(options, () => {
 		if (client.authorized) {
-			console.log("Connection authorized by a Certificate Authority.")
+			console.info("Connection authorized by a Certificate Authority.")
 		} else {
-			console.log("Connection not authorized: " + client.authorizationError)
+			console.info("Connection not authorized: " + client.authorizationError)
 		}
 	})
 
