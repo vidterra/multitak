@@ -11,6 +11,7 @@
 		"morgan": "",
 		"multer": "",
 		"nocache": "",
+		"sanitize-filename": "",
 		"uuid": "",
 		"xml-js": ""
 	},

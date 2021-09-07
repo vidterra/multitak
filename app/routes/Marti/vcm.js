@@ -3,6 +3,7 @@ const fs = require('fs').promises
 const fss = require('fs')
 const path = require('path')
 const router = express.Router()
+const sanitize = require('sanitize-filename')
 const xmljs = require('xml-js')
 
 router.use(express.raw({type: 'application/xml'}))
@@ -34,7 +35,7 @@ router.get('/Marti/vcm', async (req, res) => {
 router.post('/Marti/vcm', async (req, res) => {
 	const videoJs = xmljs.xml2js(req.body, {compact: true})
 	const feed = videoJs.videoConnections.feed
-	const uid = feed.uid._text
+	const uid = sanitize(feed.uid._text)
 	await fs.writeFile(path.join(videoStorage, uid), JSON.stringify(feed))
 	return res.send({status: 'OK'})
 })
