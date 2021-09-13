@@ -1,4 +1,4 @@
-# multitak.js
+# multitak
 
 A simple TAK server written in Javascript that relays messages between networks and servers
 

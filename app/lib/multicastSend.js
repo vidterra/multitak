@@ -4,9 +4,7 @@ const helper = require('@lib/helper')
 const COT_PORT = 6969
 const COT_ADDRESS = '239.2.3.1'
 
-const interfaces = helper.getInterfaces()
 const interfaceBlacklist = process.env.INTERFACE_BLACKLIST_SEND ? process.env.INTERFACE_BLACKLIST_SEND.split(',') : []
-const serverAddresses = interfaces.map(int => int.address)
 
 const cotSendSockets = {}
 
@@ -35,7 +33,7 @@ const start = (int) => {
 }
 
 messageEmitter.on('cotMulticastSend', (message) => {
-	if(message.source.type === 'multicast' && serverAddresses.includes(message.source.ip)) return // if the source was multitak IP don't send it back to multicast
+	if(message.source.type === 'multicast' && helper.getInterfaceAddresses().includes(message.source.ip)) return // if the source was multitak IP don't send it back to multicast
 
 	for (const address of Object.keys(cotSendSockets)) {
 		const socket = cotSendSockets[address]

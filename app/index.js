@@ -42,8 +42,8 @@ global.messageEmitter = new EventEmitter()
 require('@lib/tcpServer')
 require('@lib/tcpClient')
 require('@lib/sslClient')
-require('@lib/multicastReceive')
-require('@lib/multicastSend')
+//require('@lib/multicastReceive')
+//require('@lib/multicastSend')
 
 global.cotHistory = []
 

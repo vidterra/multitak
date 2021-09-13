@@ -125,6 +125,10 @@ module.exports.getInterfaces = (name = null) => {
 	return filteredInterfaces
 }
 
+module.exports.getInterfaceAddresses = () => {
+	return module.exports.getInterfaces().map(int => int.address)
+}
+
 module.exports.helloPkg = () => {
 	const dt = Date.now();
 	const dtD = new Date(dt).toISOString();

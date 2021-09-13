@@ -5,8 +5,6 @@ const COT_PORT = 6969
 const COT_ADDRESS = '239.2.3.1'
 
 const cotReceiveSockets = {}
-const interfaces = helper.getInterfaces()
-const serverAddresses = interfaces.map(int => int.address)
 const interfaceBlacklist = process.env.INTERFACE_BLACKLIST_RECEIVE ? process.env.INTERFACE_BLACKLIST_RECEIVE.split(',') : []
 
 const run = (int) => {
@@ -18,7 +16,7 @@ const run = (int) => {
 	cotReceiveSocket.bind(COT_PORT, () => {
 		const addMembership = () => {
 			try {
-				for (const int of interfaces) {
+				for (const int of helper.getInterfaces()) {
 					if(!interfaceBlacklist.includes(int.name)) {
 						cotReceiveSocket.addMembership(COT_ADDRESS, int.address)
 						console.debug(`Connected multicast receive to interface ${int.name} at ${int.address}`)
@@ -39,7 +37,7 @@ const run = (int) => {
 
 	cotReceiveSocket.on('message', (raw, rdata) => {
 		//if (rdata.address === int.address) return // do not process multicast messages sent by this server
-		//todo uncomment this if(serverAddresses.includes(rdata.address)) return // do not process multicast messages sent by this server
+		if(helper.getInterfaceAddresses().includes(rdata.address)) return // do not process multicast messages sent by this server
 		const message = helper.parseMessage(raw)
 
 		// todo improve by detecting which interface this packet was received on and not sending the packet back to the same interface
