@@ -37,7 +37,7 @@ const run = (int) => {
 
 	cotReceiveSocket.on('message', (raw, rdata) => {
 		//if (rdata.address === int.address) return // do not process multicast messages sent by this server
-		if(helper.getInterfaceAddresses().includes(rdata.address)) return // do not process multicast messages sent by this server
+		//if(helper.getInterfaceAddresses().includes(rdata.address)) return // do not process multicast messages sent by this server
 		const message = helper.parseMessage(raw)
 
 		// todo improve by detecting which interface this packet was received on and not sending the packet back to the same interface
