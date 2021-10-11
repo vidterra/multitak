@@ -42,10 +42,8 @@ global.messageEmitter = new EventEmitter()
 require('@lib/tcpServer')
 require('@lib/tcpClient')
 require('@lib/sslClient')
-if (process.env.MULTITAK_MULTICAST_DISABLE !== 'true') {
-	require('@lib/multicastReceive')
-	require('@lib/multicastSend')
-}
+if (process.env.MULTITAK_MULTICAST_RECEIVE_DISABLE !== 'true') require('@lib/multicastReceive')
+if (process.env.MULTITAK_MULTICAST_SEND_DISABLE !== 'true') require('@lib/multicastSend')
 
 global.cotHistory = []
 

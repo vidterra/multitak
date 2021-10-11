@@ -97,6 +97,14 @@ MultiTAK can be configured using environment variables in 3 ways
 - Port for the web API server to listen on
 - `Default` is `8080`
 
+`MULTITAK_MULTICAST_RECEIVE_DISABLE`
+- Disable receiving multicast 
+- `Default` multicast receive enabled if not defined
+
+`MULTITAK_MULTICAST_SEND_DISABLE`
+- Disable sending multicast
+- `Default` multicast sending enabled if not defined
+
 `INTERFACE_BLACKLIST_SEND=eth0,eth1`
 - Comma separated list of ethernet interfaces to ignore sending multicast
 - `Default` is off if not defined
