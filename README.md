@@ -56,7 +56,7 @@ node app/index.js
 
 ## Design
 
-MultiTAK is opinionated and designed to work without any user configuration. By default it will listen for TAK messages on all physical network interfaces and repeat what it receives to every interface. It also hosts a simple TAK server and can be a client to a remote TAK server.  
+MultiTAK is opinionated and designed to work without any user configuration. By default it will listen for TAK messages on all physical network interfaces and repeats what it receives to every interface. It also hosts a simple TAK server and can be a client to a remote TAK server.  
 
 MultiTAK can receive TAK proto messages, but will always translate to COT XML for storage and output. Proto to COT translation is incomplete, and some message types may not work correctly yet. MultiTAK relies on https://github.com/vidterra/tak.js for message conversion.
 

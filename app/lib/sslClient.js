@@ -27,25 +27,39 @@ const run = () => {
 		}
 	})
 
+	const processMessage = (input) => {
+		switch (true) {
+			case input.message.event._attributes.type === 't-x-c-t-r':
+				client.write(helper.cotPing())
+				break
+			default:
+				messageEmitter.emit('cotAdd', input)
+				break
+		}
+	}
+
+	let buffer = ''
 	client.on('data', (raw) => {
 		// this assumes only COT XML will be sent over TCP
-		try {
-			const result = helper.findCotTcp(raw)
-			for (const message of result) {
-				console.debug(`Received TCP message from remote TAK server ${url}`)
-				messageEmitter.emit('cotAdd', {
+		let data = buffer + raw.toString()
+		console.debug(`Received TCP client message from remote TAK server ${url}`, raw.length)
+		for (let result; result = helper.findCotTcp(data);) {
+			try {
+				processMessage({
 					date: Date.now(),
 					source: {
 						type: 'sslclient',
 						ip: url
 					},
-					raw,
-					message: cot.xml2js(message)
+					raw: result.event,
+					message: cot.xml2js(result.event)
 				})
+			} catch(e) {
+				console.error('Error parsing', e, raw.toString())
 			}
-		} catch (e) {
-			console.error('error', e, raw.toString())
+			data = result.remainder
 		}
+		buffer = data
 	})
 
 	client.on('error', (err) => {

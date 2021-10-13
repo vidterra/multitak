@@ -2,7 +2,7 @@
 	"name": "@vidterra/multitak",
 	"version": "0.0.2",
 	"dependencies": {
-		"@vidterra/tak.js": "^0.0.6",
+		"@vidterra/tak.js": "^0.0.7",
 		"cookie-parser": "",
 		"cors": "",
 		"dotenv": "",
