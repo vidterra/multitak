@@ -130,9 +130,9 @@ module.exports.getInterfaceAddresses = () => {
 }
 
 module.exports.helloPkg = () => {
-	const dt = Date.now();
-	const dtD = new Date(dt).toISOString();
-	const dtD5 = new Date(dt + 250000).toISOString();
-	const pkg = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><event version="2.0" type="t-x-d-d" uid="tak-web-map" time="'+dtD+'" start="'+dtD+'" stale="'+dtD5+'" how="m-g"/>';
-	return pkg;
+	const dt = Date.now()
+	const dtD = new Date(dt).toISOString()
+	const dtD5 = new Date(dt + 250000).toISOString()
+	const pkg = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><event version="2.0" type="t-x-d-d" uid="tak-web-map" time="'+dtD+'" start="'+dtD+'" stale="'+dtD5+'" how="m-g"/>'
+	return pkg
 }

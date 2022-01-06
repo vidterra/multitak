@@ -44,6 +44,7 @@ const server = net.createServer((client) => {
 			})
 			data = result.remainder
 		}
+		buffer = data
 	})
 
 	client.on('error', () => {
